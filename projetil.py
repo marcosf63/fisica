@@ -3,7 +3,7 @@ import math
 
 # Definicoes da tela
 background_colour = (255,255,255)
-(width, height) = (500, 500)
+(width, height) = (700, 500)
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Projetil')
 resistenciaDoAr = 0.999
@@ -18,6 +18,16 @@ def somaVetores((angulo1, tamanho1), (angulo2, tamanho2)):
   tamanho = math.hypot(x,y)
 
   return (angulo, tamanho)
+
+def colisao(particula1, particula2):
+  dx = particula1.x - particula2.x
+  dy = particula1.y - particula2.y
+
+  distancia = math.hypot(dx, dy)
+  if distancia < particula1.raio + particula2.raio:
+    tagente = math.atan2(dx, dy)
+    particula1.angulo = 2 * tagente - particula1.angulo
+    particula2.angulo = 2 * tagente + particula2.angulo
 
 class Particula:
   def __init__(self, (x,y), raio, angulo):
@@ -41,14 +51,14 @@ class Particula:
 
 
 p1 = Particula((15, 500 - 15), 15, 3 * math.pi / 4)
-p1.velocidade = 3.5
-
+p1.velocidade = 4.5
+#p1.velocidade = 3.5
 
 p2 = Particula((500 - 15, 15), 15, 0)
 p2.velocidade = 0
 
-g = 0.010
-
+#g = 0.020
+g = 0.04
 
 running = True
 while running:
@@ -61,4 +71,5 @@ while running:
   p2.display()
   p1.mover((0,g))
   p1.display()
+  colisao(p1,p2)
   pygame.display.flip()  
